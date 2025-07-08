@@ -1,0 +1,49 @@
+﻿@model biblioteca_musical_v2_no_Asistant.Models.Artista
+@{
+    ViewData["Title"] = "Crear Artista";
+}
+
+<h1 class="text-center text-primary">ARTISTAS</h1>
+<h4>Crear Nuevo Artista</h4>
+<hr />
+
+<form asp-action="Create" method="post" class="row g-3">
+    <div class="col-md-4">
+        <label asp-for="Nombre" class="form-label">Nombre</label>
+        <input asp-for="Nombre" class="form-control" />
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Apellido" class="form-label">Apellido</label>
+        <input asp-for="Apellido" class="form-control" />
+    </div>
+    <div class="col-md-4">
+        <label asp-for="NombreArtistico" class="form-label">Nombre Artístico</label>
+        <input asp-for="NombreArtistico" class="form-control" />
+    </div>
+    <div class="col-md-4">
+        <label asp-for="TipoArtista" class="form-label">Tipo Artista</label>
+        <input asp-for="TipoArtista" class="form-control" />
+    </div>
+    <div class="col-md-4">
+        <label asp-for="PaisOrigen" class="form-label">País Origen</label>
+        <input asp-for="PaisOrigen" class="form-control" />
+    </div>
+    <div class="col-md-8">
+        <label asp-for="Biografia" class="form-label">Biografía</label>
+        <textarea asp-for="Biografia" class="form-control" rows="2"></textarea>
+    </div>
+    <div class="col-12 text-end">
+        <button type="submit" class="btn btn-success">
+            <i class="fa-solid fa-floppy-disk"></i> Añadir
+        </button>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fa-solid fa-left-long"></i> Volver
+        </a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

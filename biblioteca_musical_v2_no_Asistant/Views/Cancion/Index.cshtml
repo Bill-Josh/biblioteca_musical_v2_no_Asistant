@@ -1,0 +1,61 @@
+﻿@model List<biblioteca_musical_v2_no_Asistant.Models.Cancion>
+@using Microsoft.AspNetCore.Mvc.Rendering
+@{
+    ViewData["Title"] = "Canciones";
+}
+
+<h1 class="text-center text-primary">CANCIONES</h1>
+
+<div class="mb-3 text-end">
+    <a asp-action="Create" class="btn btn-success">
+        <i class="fa-solid fa-plus"></i> Nueva Canción
+    </a>
+</div>
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Título</th>
+            <th>Duración</th>
+            <th>Año</th>
+            <th>Creada</th>
+            <th>Modificada</th>
+            <th>Artista</th>
+            <th>Género</th>
+            <th class="text-end">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model)
+        {
+            <tr>
+                <td>@c.Titulo</td>
+                <td>
+                    @{
+                        var m = (c.DuracionCancion ?? 0) / 60;
+                        var s = (c.DuracionCancion ?? 0) % 60;
+                    }
+                    @($"{m}:{s:D2}")
+                </td>
+                <td>@c.AnioLanzamiento</td>
+                <td>@c.FechaCreacion?.ToShortDateString()</td>
+                <td>@c.FechaModificacion?.ToShortDateString()</td>
+                <td>@c.IdArtistaNavigation?.Nombre</td>
+                <td>@c.IdGeneroNavigation?.Nombre</td>
+                <td class="text-end">
+                    <a asp-action="Edit" asp-route-id="@c.IdCancion"
+                       class="btn btn-warning btn-sm text-dark me-2">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+                    <form asp-action="Delete" method="post" class="d-inline"
+                          onsubmit="return confirm('¿Eliminar (inactivar) esta canción?');">
+                        <input type="hidden" name="id" value="@c.IdCancion" />
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

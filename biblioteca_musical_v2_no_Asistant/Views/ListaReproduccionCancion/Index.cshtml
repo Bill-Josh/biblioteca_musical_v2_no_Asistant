@@ -1,0 +1,56 @@
+﻿@model List<biblioteca_musical_v2_no_Asistant.Models.ListaReproduccionCancion>
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewData["Title"] = "Canciones en Listas";
+}
+
+<h1 class="text-center text-primary">CANCIONES EN LISTAS</h1>
+
+<div class="p-3 mb-4 border rounded">
+    <form asp-action="Create" method="post" class="row g-3">
+        <div class="col-md-5">
+            <label for="IdLista" class="form-label">Lista</label>
+            <select id="IdLista" name="IdLista" class="form-select" asp-items="(SelectList)ViewBag.Listas"></select>
+        </div>
+        <div class="col-md-5">
+            <label for="IdCancion" class="form-label">Canción</label>
+            <select id="IdCancion" name="IdCancion" class="form-select" asp-items="(SelectList)ViewBag.Canciones"></select>
+        </div>
+        <div class="col-md-2 align-self-end">
+            <button type="submit" class="btn btn-success w-100">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+        </div>
+    </form>
+</div>
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Lista</th>
+            <th>Canción</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var x in Model)
+        {
+            <tr>
+                <td>@x.Lista?.Nombre</td>
+                <td>@x.Cancion?.Titulo</td>
+                <td class="d-flex">
+                    <a asp-action="Edit" asp-route-id="@x.IdListaRepCan" class="btn btn-warning btn-sm me-2">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+                    <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('¿Eliminar este registro?');">
+                        <input type="hidden" name="id" value="@x.IdListaRepCan" />
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
