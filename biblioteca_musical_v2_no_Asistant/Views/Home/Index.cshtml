@@ -53,13 +53,13 @@
 var activas = _db.Canciones
     .Where(c => c.Estado == "Activo")
     .ToList();
-    </code></pre>
+        </code></pre>
         <pre class="bg-light p-3"><code class="language-sql">
 -- SQL equivalente
 SELECT *
 FROM Cancion
 WHERE estado = 'Activo';
-    </code></pre>
+        </code></pre>
 
         <p>
             Consulta compuesta con LINQ:
@@ -75,14 +75,14 @@ var detalles = (
       Artista = a.NombreArtistico
     }
 ).ToList();
-    </code></pre>
+        </code></pre>
         <pre class="bg-light p-3"><code class="language-sql">
 -- SQL equivalente
 SELECT c.titulo, a.nombre_artistico
 FROM Cancion c
 JOIN Artista a ON c.id_artista = a.id_artista
 WHERE a.pais_origen = 'España';
-    </code></pre>
+        </code></pre>
         <p>
             Descubre más sobre LINQ en
             <a href="https://docs.microsoft.com/dotnet/csharp/programming-guide/concepts/linq/" target="_blank">
@@ -154,7 +154,7 @@ WHERE a.pais_origen = 'España';
             <li class="list-group-item">
                 <strong>Generamos vistas manualmente:</strong><br />
                 - Dentro de <code>Views</code> creamos carpetas por entidad (ej. <code>Artista</code>).<br />
-                - En cada carpeta creamos dos archivos vacíos: <code>Index.cshtml</code> y <code>Edit.cshtml</code>.<br />
+                - En cada carpeta creamos archivos separados: <code>Index.cshtml</code>, <code>Create.cshtml</code>, <code>Edit.cshtml</code>.<br />
                 - Pegamos el código de formularios y tablas según nuestros ejemplos.<br />
                 <em>Tip:</em> si necesitas un grid reutilizable, crea un partial view (<code>_GridCanciones.cshtml</code>) y haz:
                 <code>@@Html.Partial("_GridCanciones", Model)</code>
