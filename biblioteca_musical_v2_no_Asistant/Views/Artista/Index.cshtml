@@ -1,0 +1,54 @@
+﻿@model List<biblioteca_musical_v2_no_Asistant.Models.Artista>
+@{
+    ViewData["Title"] = "Artistas";
+}
+
+<h1 class="text-center text-primary">ARTISTAS</h1>
+
+<div class="mb-3 text-end">
+    <a asp-action="Create" class="btn btn-success">
+        <i class="fa-solid fa-plus"></i> Crear Nuevo Artista
+    </a>
+</div>
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Artístico</th>
+            <th>Tipo</th>
+            <th>País</th>
+            <th>Creado</th>
+            <th>Modificado</th>
+            <th class="text-end">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var a in Model)
+        {
+            <tr>
+                <td>@a.Nombre</td>
+                <td>@a.Apellido</td>
+                <td>@a.NombreArtistico</td>
+                <td>@a.TipoArtista</td>
+                <td>@a.PaisOrigen</td>
+                <td>@a.FechaCreacion?.ToShortDateString()</td>
+                <td>@a.FechaModificacion?.ToShortDateString()</td>
+                <td class="text-end">
+                    <a asp-action="Edit" asp-route-id="@a.IdArtista"
+                       class="btn btn-warning btn-sm text-dark me-2">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+                    <form asp-action="Delete" method="post" class="d-inline"
+                          onsubmit="return confirm('¿Eliminar este artista?');">
+                        <input type="hidden" name="id" value="@a.IdArtista" />
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

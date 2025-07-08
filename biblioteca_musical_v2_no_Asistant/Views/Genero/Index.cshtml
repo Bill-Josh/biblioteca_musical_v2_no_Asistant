@@ -1,0 +1,48 @@
+﻿@model List<biblioteca_musical_v2_no_Asistant.Models.Genero>
+@{
+    ViewData["Title"] = "Géneros";
+}
+
+<h1 class="text-center text-primary">GÉNEROS</h1>
+
+<div class="mb-3 text-end">
+    <a asp-action="Create" class="btn btn-success">
+        <i class="fa-solid fa-plus"></i> Crear Nuevo Género
+    </a>
+</div>
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Creado</th>
+            <th>Modificado</th>
+            <th class="text-end">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var g in Model)
+        {
+            <tr>
+                <td>@g.Nombre</td>
+                <td>@g.Descripcion</td>
+                <td>@g.FechaCreacion?.ToShortDateString()</td>
+                <td>@g.FechaModificacion?.ToShortDateString()</td>
+                <td class="text-end">
+                    <a asp-action="Edit" asp-route-id="@g.IdGenero"
+                       class="btn btn-warning btn-sm text-dark me-2">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+                    <form asp-action="Delete" method="post" class="d-inline"
+                          onsubmit="return confirm('¿Eliminar este género?');">
+                        <input type="hidden" name="id" value="@g.IdGenero" />
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

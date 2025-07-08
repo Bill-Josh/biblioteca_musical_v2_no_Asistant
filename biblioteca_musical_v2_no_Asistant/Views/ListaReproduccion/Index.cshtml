@@ -1,0 +1,47 @@
+﻿@model List<biblioteca_musical_v2_no_Asistant.Models.ListaReproduccion>
+
+@{
+    ViewData["Title"] = "Listas de Reproducción";
+}
+
+<h1 class="text-center text-primary">LISTAS DE REPRODUCCIÓN</h1>
+
+<div class="mb-3 text-end">
+    <a asp-action="Create" class="btn btn-success">
+        <i class="fa-solid fa-plus"></i> Nueva Lista de Reproducción
+    </a>
+</div>
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Creada</th>
+            <th>Modificada</th>
+            <th class="text-end">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var l in Model)
+        {
+            <tr>
+                <td>@l.Nombre</td>
+                <td>@l.Descripcion</td>
+                <td>@l.FechaCreacion?.ToShortDateString()</td>
+                <td>@l.FechaModificacion?.ToShortDateString()</td>
+                <td class="text-end">
+                    <a asp-action="Edit" asp-route-id="@l.IdLista" class="btn btn-warning btn-sm me-2">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+                    <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('¿Eliminar esta lista?');">
+                        <input type="hidden" name="id" value="@l.IdLista" />
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

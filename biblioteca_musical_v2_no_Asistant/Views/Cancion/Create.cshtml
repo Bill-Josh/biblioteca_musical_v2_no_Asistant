@@ -1,0 +1,53 @@
+﻿@model biblioteca_musical_v2_no_Asistant.Models.Cancion
+@using Microsoft.AspNetCore.Mvc.Rendering
+@{
+    ViewData["Title"] = "Nueva Canción";
+}
+
+<h1 class="text-center text-primary">CANCIONES</h1>
+<h4>Crear Nueva Canción</h4>
+<hr />
+
+<form asp-action="Create" method="post" class="row g-3">
+    <div class="col-md-4">
+        <label asp-for="Titulo" class="form-label">Título</label>
+        <input asp-for="Titulo" class="form-control" />
+    </div>
+    <div class="col-md-2">
+        <label asp-for="DuracionCancion" class="form-label">Duración (s)</label>
+        <input asp-for="DuracionCancion" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        <label asp-for="IdGenero" class="form-label">Género</label>
+        <select asp-for="IdGenero" class="form-select" asp-items="(SelectList)ViewBag.Generos"></select>
+    </div>
+    <div class="col-md-3">
+        <label asp-for="IdArtista" class="form-label">Artista</label>
+        <select asp-for="IdArtista" class="form-select" asp-items="(SelectList)ViewBag.Artistas"></select>
+    </div>
+    <div class="col-md-2">
+        <label asp-for="AnioLanzamiento" class="form-label">Año</label>
+        <input asp-for="AnioLanzamiento" class="form-control" />
+    </div>
+    <div class="col-md-2">
+        <label asp-for="Estado" class="form-label">Estado</label>
+        <select asp-for="Estado" class="form-select">
+            <option value="Activo">Activo</option>
+            <option value="Inactivo">Inactivo</option>
+        </select>
+    </div>
+    <div class="col-12 text-end">
+        <button type="submit" class="btn btn-success">
+            <i class="fa-solid fa-floppy-disk"></i> Guardar
+        </button>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fa-solid fa-left-long"></i> Volver
+        </a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,48 @@
+﻿@model biblioteca_musical_v2_no_Asistant.Models.Artista
+
+@{
+    ViewData["Title"] = "Editar Artista";
+}
+
+<h1 class="text-center text-primary">ARTISTA</h1>
+<h4>EDITAR</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="IdArtista" />
+
+            <div class="mb-3">
+                <label asp-for="Nombre" class="form-label">Nombre</label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Apellido" class="form-label">Apellido</label>
+                <input asp-for="Apellido" class="form-control" />
+                <span asp-validation-for="Apellido" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="NombreArtistico" class="form-label">Nombre Artístico</label>
+                <input asp-for="NombreArtistico" class="form-control" />
+                <span asp-validation-for="NombreArtistico" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-floppy-disk"></i> Guardar
+            </button>
+            <a asp-action="Index" class="btn btn-danger ms-2">
+                <i class="fa-solid fa-left-long"></i> Volver
+            </a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
