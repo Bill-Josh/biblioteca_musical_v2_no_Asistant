@@ -1,0 +1,150 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!-- Encabezado estilo “jumbotron” -->
+<div class="bg-primary text-white py-5 mb-4">
+    <div class="container text-center">
+        <h1><i class="fa-solid fa-music"></i> Biblioteca Musical MVC</h1>
+        <p class="lead">Guía detallada para comprender paso a paso la arquitectura, los conceptos y el flujo de datos</p>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- Introducción extensa -->
+    <section class="mb-5">
+        <h2><i class="fa-solid fa-book-open"></i> Introducción General</h2>
+        <p>
+            Bienvenido a esta completa documentación diseñada para estudiantes que desean
+            entender <strong>desde cero</strong> cómo se construye una aplicación web con
+            <strong>ASP.NET Core MVC</strong>, <strong>Entity Framework Core</strong> y
+            <strong>LINQ</strong>. A diferencia de usar el asistente de scaffolding,
+            aquí explicaremos <em>cada línea de código</em>, cada configuración y cada
+            decisión de diseño para que comprendas en profundidad cómo funcionan las
+            capas de datos, lógica y presentación.
+        </p>
+    </section>
+
+    <!-- Entity Framework Core en detalle -->
+    <section class="mb-5">
+        <h3><i class="fa-solid fa-database"></i> Entity Framework Core: Profundizando</h3>
+        <ul>
+            <li><strong>Code First y Database First:</strong> puedes generar la BD desde tus clases o mapear a un esquema existente.</li>
+            <li><strong>Migrations:</strong> versionado de esquemas con comandos EF CLI.</li>
+            <li><strong>DataAnnotations y Fluent API:</strong> definir restricciones, índices, nombres de tablas/columnas.</li>
+            <li><strong>Transaccionalidad y concurrencia:</strong> control de cambios en varias entidades.</li>
+        </ul>
+        <p>
+            En este proyecto usamos atributos <code>[Table]</code> y <code>[Column]</code>
+            para mapear manualmente modelos a tablas, lo que te da control total.
+        </p>
+    </section>
+
+    <!-- LINQ explicado -->
+    <section class="mb-5">
+        <h3><i class="fa-solid fa-code"></i> LINQ: Consultas Integradas en C#</h3>
+        <p>
+            LINQ te permite escribir consultas en C# como si fuese SQL, con tipado fuerte
+            y autocompletado. Al integrarse con EF Core, tus expresiones se traducen a SQL
+            optimizado.
+        </p>
+        <pre class="bg-light p-3"><code class="language-csharp">
+// Consulta simple: canciones activas
+var activas = _db.Canciones
+    .Where(c => c.Estado == "Activo")
+    .ToList();
+
+// Consulta compuesta: canciones con su artista
+var lista = (
+    from c in _db.Canciones
+    join a in _db.Artistas on c.IdArtista equals a.IdArtista
+    select new {
+      c.Titulo,
+      Artista = a.NombreArtistico
+    }
+).ToList();
+    </code></pre>
+    </section>
+
+    <!-- Flujo de datos MVC detallado -->
+    <section class="mb-5">
+        <h3><i class="fa-solid fa-project-diagram"></i> Flujo de Datos MVC Paso a Paso</h3>
+        <ol>
+            <li><strong>Usuario → Vista:</strong> Completa un formulario y envía POST.</li>
+            <li><strong>Vista → Controlador:</strong> Se recibe el modelo, se valida <code>ModelState</code>.</li>
+            <li><strong>Controlador → EF Core:</strong> Llama a <code>_db.Add</code> o <code>_db.SaveChanges</code>.</li>
+            <li><strong>EF Core → Base de Datos:</strong> Ejecuta INSERT/UPDATE/DELETE.</li>
+            <li><strong>Controlador → Vista Index:</strong> Carga con <code>_db.Canciones.ToList()</code> e incluye relaciones.</li>
+            <li><strong>Vista → Usuario:</strong> Muestra tabla con datos y botones de acción.</li>
+        </ol>
+    </section>
+
+    <!-- PASO A PASO DE CÓDIGO -->
+    <section class="mb-5">
+        <h3><i class="fa-solid fa-list-ol"></i> Instrucciones de Codificación Paso a Paso</h3>
+        <p>Sigue este orden para entender y construir tu proyecto:</p>
+        <ol class="list-group list-group-numbered mb-4">
+            <li class="list-group-item">
+                <strong>Crear el esquema de base de datos</strong><br />
+                - En SQL Server define todas tus tablas y relaciones.<br />
+                - Genera el script de creación (ya lo tienes en el fichero .sql).
+            </li>
+            <li class="list-group-item">
+                <strong>Crear el proyecto ASP.NET Core MVC</strong><br />
+                - En Visual Studio/CLI, selecciona .NET 6 MVC.<br />
+                - Asegúrate de incluir Bootstrap y FontAwesome (vienen por defecto o via _Layout).
+            </li>
+            <li class="list-group-item">
+                <strong>Modelos (Clases C#)</strong><br />
+                - Crea carpeta <code>Models</code>.<br />
+                - Crea un archivo por entidad (Artista.cs, Cancion.cs, etc.).<br />
+                - Añade <code>[Table]</code>, <code>[Column]</code>, <code>[Key]</code>.
+            </li>
+            <li class="list-group-item">
+                <strong>DbContext</strong><br />
+                - Crea <code>BibliotecaMusicalContext</code> en carpeta <code>Models</code>.<br />
+                - Regístralo en <code>Program.cs</code> via <code>AddDbContext</code>.<br />
+                - Configura la cadena de conexión en <code>appsettings.json</code>.
+            </li>
+            <li class="list-group-item">
+                <strong>Controllers</strong><br />
+                - Crea carpeta <code>Controllers</code>.<br />
+                - Por cada entidad, añade un controlador con acciones <code>Index, Create, Edit, Delete</code>.<br />
+                - Incluye XML-doc y comentarios inline para cada método.
+            </li>
+            <li class="list-group-item">
+                <strong>Vistas</strong><br />
+                - Dentro de <code>Views</code>, crea una carpeta por entidad (ej. <code>Artista</code>).<br />
+                - Dentro de ella, crea <code>Index.cshtml</code> y <code>Edit.cshtml</code> vacíos.<br />
+                - Copia el contenido del formulario y la tabla según el ejemplo.<br />
+                - Usa Bootstrap para estilos y FontAwesome para iconos.
+            </li>
+            <li class="list-group-item">
+                <strong>Ajustes finales</strong><br />
+                - Verifica rutas en <code>Program.cs</code>.<br />
+                - Prueba cada CRUD desde el navegador.<br />
+                - Añade validación de datos y manejo de errores.
+            </li>
+        </ol>
+    </section>
+
+    <!-- Conclusión y consejos -->
+    <section class="mb-5">
+        <h3><i class="fa-solid fa-lightbulb"></i> Recomendaciones Finales</h3>
+        <ul>
+            <li>Documenta tu código con comentarios claros y XML-doc.</li>
+            <li>Usa <code>Include()</code> para cargar relaciones en tus consultas.</li>
+            <li>Ejecuta migraciones periódicas y versiona tu esquema.</li>
+            <li>Mantén tu <code>DbContext</code> con un alcance por petición para evitar leaks.</li>
+        </ul>
+    </section>
+
+    <!-- Pie de página -->
+    <footer class="text-center py-4 border-top">
+        <p class="mb-0">
+            <small>© 2025 Biblioteca Musical. Guía didáctica en español para alumnos de desarrollo.</small>
+        </p>
+    </footer>
+
+</div>

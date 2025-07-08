@@ -2,7 +2,196 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- Encabezado estilo “jumbotron” -->
+<div class="bg-primary text-white py-5 mb-4">
+    <div class="container text-center">
+        <h1><i class="fa-solid fa-music"></i> Biblioteca Musical MVC</h1>
+        <p class="lead">Guía detallada para comprender paso a paso la arquitectura, los conceptos y el flujo de datos</p>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- Introducción extensa -->
+    <section class="mb-5">
+        <h2><i class="fa-solid fa-book-open"></i> Introducción General</h2>
+        <p>
+            Bienvenidos a esta documentación para alumnos que desean conocer <em>cómo creamos</em>
+            una aplicación web con <strong>ASP.NET Core MVC</strong>, <strong>Entity Framework Core</strong> y <strong>LINQ</strong>
+            sin usar el asistente de scaffolding. Aquí explicamos cada línea de código, configuración y decisión de diseño
+            para que interiorices cómo funcionan las capas de datos, la lógica de negocio y la presentación.
+        </p>
+    </section>
+
+    <!-- Entity Framework Core en detalle -->
+    <section class="mb-5">
+        <h3><i class="fa-solid fa-database"></i> Entity Framework Core</h3>
+        <p>
+            En nuestro proyecto <strong>definimos modelos</strong> con <code>[Table]</code> y <code>[Column]</code>,
+            registramos el <code>DbContext</code> en <code>Program.cs</code> y configuramos la cadena de conexión
+            en <code>appsettings.json</code>. Con EF Core conseguimos:
+        </p>
+        <ul>
+            <li><strong>Migrations:</strong> versionamos cambios en el esquema con <code>dotnet ef migrations</code>.</li>
+            <li><strong>DataAnnotations y Fluent API:</strong> ajustamos nombres, tipos, índices y restricciones.</li>
+            <li><strong>Transaccionalidad:</strong> agrupamos operaciones en una misma transacción.</li>
+        </ul>
+        <p>
+            Para profundizar, consulta la documentación oficial:
+            <a href="https://docs.microsoft.com/ef/core/" target="_blank">EF Core Docs</a>.
+        </p>
+    </section>
+
+    <!-- LINQ explicado -->
+    <section class="mb-5">
+        <h3><i class="fa-solid fa-code"></i> LINQ vs SQL</h3>
+        <p>
+            Con LINQ escribimos consultas tipadas en C#, que EF Core traduce a SQL. Ejemplos:
+        </p>
+        <pre class="bg-light p-3"><code class="language-csharp">
+// LINQ simple: canciones activas
+var activas = _db.Canciones
+    .Where(c => c.Estado == "Activo")
+    .ToList();
+        </code></pre>
+        <pre class="bg-light p-3"><code class="language-sql">
+-- SQL equivalente
+SELECT *
+FROM Cancion
+WHERE estado = 'Activo';
+        </code></pre>
+
+        <p>
+            Consulta compuesta con LINQ:
+        </p>
+        <pre class="bg-light p-3"><code class="language-csharp">
+// LINQ compuesta: título y artista de España
+var detalles = (
+    from c in _db.Canciones
+    join a in _db.Artistas on c.IdArtista equals a.IdArtista
+    where a.PaisOrigen == "España"
+    select new {
+      Cancion = c.Titulo,
+      Artista = a.NombreArtistico
+    }
+).ToList();
+        </code></pre>
+        <pre class="bg-light p-3"><code class="language-sql">
+-- SQL equivalente
+SELECT c.titulo, a.nombre_artistico
+FROM Cancion c
+JOIN Artista a ON c.id_artista = a.id_artista
+WHERE a.pais_origen = 'España';
+        </code></pre>
+        <p>
+            Descubre más sobre LINQ en
+            <a href="https://docs.microsoft.com/dotnet/csharp/programming-guide/concepts/linq/" target="_blank">
+                Documentación LINQ
+            </a>.
+        </p>
+    </section>
+
+    <!-- Flujo de datos MVC detallado -->
+    <section class="mb-5">
+        <h3><i class="fa-solid fa-project-diagram"></i> Flujo de Datos MVC</h3>
+        <ol>
+            <li>
+                <strong>Usuario → Vista:</strong> Rellenamos y enviamos el formulario de <code>Create</code> o <code>Edit</code>.
+            </li>
+            <li>
+                <strong>Vista → Controlador:</strong> recibimos el modelo, validamos <code>ModelState</code> y asignamos auditoría.
+            </li>
+            <li>
+                <strong>Controlador → EF Core:</strong> llamamos a <code>_db.Add(model)</code> o <code>_db.SaveChanges()</code>.
+            </li>
+            <li>
+                <strong>EF Core → BD:</strong> se ejecuta el SQL correspondiente (INSERT/UPDATE/DELETE).
+            </li>
+            <li>
+                <strong>Controlador → Index:</strong> cargamos la lista con <code>_db.Canciones.Include(...).ToList()</code>.
+            </li>
+            <li>
+                <strong>Vista Index:</strong> se renderiza la tabla y los botones de edición/eliminación.
+            </li>
+        </ol>
+    </section>
+
+    <!-- Instrucciones de codificación paso a paso -->
+    <section class="mb-5">
+        <h3><i class="fa-solid fa-list-ol"></i> Cómo iniciamos el proyecto</h3>
+        <p>Este es el orden exacto que seguimos; presta atención a las consideraciones de cada paso:</p>
+        <ol class="list-group list-group-numbered mb-4">
+            <li class="list-group-item">
+                <strong>Creamos el esquema de la base de datos:</strong><br />
+                - Definimos tablas y relaciones en SQL Server.<br />
+                - Guardamos el script para futuras referencias y migraciones.<br />
+                <em>Consideración:</em> verifica tipos de datos y claves foráneas antes de continuar.
+            </li>
+            <li class="list-group-item">
+                <strong>Generamos el proyecto ASP.NET Core MVC:</strong><br />
+                - En Visual Studio o CLI, elegimos .NET 6 MVC.<br />
+                - Incluimos Bootstrap y FontAwesome en <code>_Layout.cshtml</code>.<br />
+                <em>Consejo:</em> organiza tus carpetas (<code>Models</code>, <code>Views</code>, <code>Controllers</code>).
+            </li>
+            <li class="list-group-item">
+                <strong>Definimos los modelos:</strong><br />
+                - Creamos un archivo por entidad en <code>Models</code>.<br />
+                - Añadimos <code>[Table]</code>, <code>[Key]</code> y <code>[Column]</code>.<br />
+                <em>Punto clave:</em> usa propiedades nulas o requeridas según la BD.
+            </li>
+            <li class="list-group-item">
+                <strong>Configuramos el DbContext:</strong><br />
+                - Creamos <code>BibliotecaMusicalContext</code> y lo registramos en <code>Program.cs</code>.<br />
+                - Editamos <code>appsettings.json</code> con la ConnectionString.<br />
+                <em>Nota:</em> mantén la cadena segura, no la expongas en repositorios públicos.
+            </li>
+            <li class="list-group-item">
+                <strong>Implementamos controladores:</strong><br />
+                - Añadimos acciones <code>Index</code>, <code>Create</code>, <code>Edit</code>, <code>Delete</code>.<br />
+                - Documentamos con XML-doc y comentarios inline.<br />
+                <em>Recomendación:</em> maneja errores con <code>try/catch</code> y ModelState.
+            </li>
+            <li class="list-group-item">
+                <strong>Generamos vistas manualmente:</strong><br />
+                - Dentro de <code>Views</code> creamos carpetas por entidad (ej. <code>Artista</code>).<br />
+                - En cada carpeta creamos archivos separados: <code>Index.cshtml</code>, <code>Create.cshtml</code>, <code>Edit.cshtml</code>.<br />
+                - Pegamos el código de formularios y tablas según nuestros ejemplos.<br />
+                <em>Tip:</em> si necesitas un grid reutilizable, crea un partial view (<code>_GridCanciones.cshtml</code>) y haz:
+                <code>@@Html.Partial("_GridCanciones", Model)</code>
+            </li>
+            <li class="list-group-item">
+                <strong>Probamos y variamos:</strong><br />
+                - Ejecuta la app y verifica cada CRUD en el navegador.<br />
+                - Cambia un filtro LINQ (por ejemplo <code>Where(c => c.AnioLanzamiento &gt; 2020)</code>) y comprueba que el grid se actualiza sin tocar la vista.<br />
+                <em>Motivación:</em> experimenta con diferentes consultas para entender la separación de capas.
+            </li>
+        </ol>
+    </section>
+
+    <!-- Conclusión y recursos -->
+    <section class="mb-5">
+        <h3><i class="fa-solid fa-lightbulb"></i> Sugerencias y Recursos</h3>
+        <ul>
+            <li>
+                Consulta la documentación de C#:
+                <a href="https://docs.microsoft.com/dotnet/csharp/" target="_blank">docs.microsoft.com/dotnet/csharp</a>
+            </li>
+            <li>
+                Profundiza en EF Core:
+                <a href="https://docs.microsoft.com/ef/core/" target="_blank">docs.microsoft.com/ef/core</a>
+            </li>
+            <li>
+                Revisa LINQ en detalle:
+                <a href="https://docs.microsoft.com/dotnet/csharp/programming-guide/concepts/linq/" target="_blank">docs.microsoft.com/linq</a>
+            </li>
+        </ul>
+    </section>
+
+    <!-- Pie de página -->
+    <footer class="text-center py-4 border-top">
+        <p class="mb-0">
+            <small>© 2025 Biblioteca Musical TES. Guía didáctica de Entity Framework y LINQ en español para alumnos de desarrollo.</small>
+        </p>
+    </footer>
+
 </div>
