@@ -1,0 +1,109 @@
+﻿@model List<biblioteca_musical_v2_no_Asistant.Models.Cancion>
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewData["Title"] = "Canciones";
+}
+
+<h1 class="text-center text-primary">CANCIONES</h1>
+
+<!-- FORMULARIO DE CREACIÓN -->
+<div class="p-3 mb-4 border rounded">
+    <form asp-action="Create" method="post" class="row g-3">
+        <div class="col-md-4">
+            <label for="Titulo" class="form-label">Título</label>
+            <input id="Titulo" name="Titulo" class="form-control" />
+        </div>
+        <div class="col-md-2">
+            <label for="DuracionCancion" class="form-label">Duración (s)</label>
+            <input id="DuracionCancion" name="DuracionCancion" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <label for="IdGenero" class="form-label">Género</label>
+            <select id="IdGenero" name="IdGenero" class="form-select" asp-items="(SelectList)ViewBag.Generos"></select>
+        </div>
+        <div class="col-md-3">
+            <label for="IdArtista" class="form-label">Artista</label>
+            <select id="IdArtista" name="IdArtista" class="form-select" asp-items="(SelectList)ViewBag.Artistas"></select>
+        </div>
+        <div class="col-md-2">
+            <label for="AnioLanzamiento" class="form-label">Año</label>
+            <input id="AnioLanzamiento" name="AnioLanzamiento" class="form-control" />
+        </div>
+        <div class="col-md-2">
+            <label for="Estado" class="form-label">Estado</label>
+            <input id="Estado" name="Estado" class="form-control" />
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-success">
+                <i class="fa-solid fa-plus"></i> Añadir
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- LISTADO, EDICIÓN INLINE Y BORRADO -->
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Título</th>
+            <th>Duración</th>
+            <th>Año</th>
+            <th>Estado</th>
+            <th>Creada</th>
+            <th>Modificada</th>
+            <th>Artista</th>
+            <th>Género</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model)
+        {
+            <tr>
+                <td>@c.Titulo</td>
+                <td>
+                    @{
+                        var m = (c.DuracionCancion ?? 0) / 60;
+                        var s = (c.DuracionCancion ?? 0) % 60;
+                    }
+                    @($"{m}:{s:D2}")
+                </td>
+                <td>@c.AnioLanzamiento</td>
+                <td>@c.Estado</td>
+                <td>@c.FechaCreacion?.ToShortDateString()</td>
+                <td>@c.FechaModificacion?.ToShortDateString()</td>
+                <td>@c.IdArtistaNavigation?.Nombre</td>
+                <td>@c.IdGeneroNavigation?.Nombre</td>
+                <td class="d-flex">
+                    <!-- EDIT COLLAPSIBLE -->
+                    <form asp-action="Edit" method="post" class="me-2">
+                        <input type="hidden" name="id" value="@c.IdCancion" />
+                        <button type="button" class="btn btn-warning btn-sm"
+                                data-bs-toggle="collapse" data-bs-target="#edit-@c.IdCancion">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <div class="collapse p-2 border mt-1" id="edit-@c.IdCancion">
+                            <input name="Titulo" value="@c.Titulo" class="form-control form-control-sm mb-1" />
+                            <input name="DuracionCancion" value="@c.DuracionCancion" class="form-control form-control-sm mb-1" />
+                            <button type="submit" class="btn btn-primary btn-sm">Guardar</button>
+                        </div>
+                    </form>
+                    <!-- DELETE -->
+                    <form asp-action="Delete" method="post" onsubmit="return confirm('¿Eliminar esta canción?');">
+                        <input type="hidden" name="id" value="@c.IdCancion" />
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
