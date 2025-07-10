@@ -4,6 +4,13 @@
     ViewData["Title"] = "Listas de Reproducción";
 }
 
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["Error"]
+    </div>
+}
+
 <h1 class="text-center text-primary">LISTAS DE REPRODUCCIÓN</h1>
 
 <div class="mb-3 text-end">

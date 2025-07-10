@@ -148,7 +148,8 @@ namespace biblioteca_musical_v2_no_Asistant.Controllers
 
         /// <summary>
         /// POST: /Cancion/Delete/{id}
-        /// Hace un "soft delete" de la canción especificada, marcándola como inactiva.
+        /// Realiza un "soft delete" de la canción especificada. Si ocurre una excepción por restricciones de integridad referencial,
+        /// se notifica al usuario mediante TempData.
         /// </summary>
         /// <param name="id">Identificador de la canción a borrar.</param>
         [HttpPost, ValidateAntiForgeryToken]
@@ -157,12 +158,18 @@ namespace biblioteca_musical_v2_no_Asistant.Controllers
             var e = await _db.Canciones.FindAsync(id);
             if (e != null)
             {
-                e.Estado = "Inactivo";
-                e.FechaModificacion = DateTime.UtcNow;
-                await _db.SaveChangesAsync();
+                try
+                {
+                    e.Estado = "Inactivo";
+                    e.FechaModificacion = DateTime.UtcNow;
+                    await _db.SaveChangesAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    TempData["Error"] = "No se puede eliminar esta canción porque está relacionada con otras entidades.";
+                }
             }
             return RedirectToAction(nameof(Index));
         }
-
     }
 }

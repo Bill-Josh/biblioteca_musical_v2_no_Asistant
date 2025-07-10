@@ -119,7 +119,8 @@ namespace biblioteca_musical_v2_no_Asistant.Controllers
 
         /// <summary>
         /// POST: /ListaReproduccion/Delete/{id}
-        /// Elimina una lista de reproducción.
+        /// Elimina una lista de reproducción. Si la lista contiene canciones asociadas,
+        /// la operación es abortada por integridad referencial y se notifica al usuario.
         /// </summary>
         /// <param name="id">Identificador de la lista a eliminar.</param>
         [HttpPost]
@@ -129,8 +130,15 @@ namespace biblioteca_musical_v2_no_Asistant.Controllers
             var entity = await _db.Listas.FindAsync(id);
             if (entity != null)
             {
-                _db.Listas.Remove(entity);
-                await _db.SaveChangesAsync();
+                try
+                {
+                    _db.Listas.Remove(entity);
+                    await _db.SaveChangesAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    TempData["Error"] = "No se puede eliminar esta lista porque contiene canciones asociadas.";
+                }
             }
 
             return RedirectToAction(nameof(Index));
