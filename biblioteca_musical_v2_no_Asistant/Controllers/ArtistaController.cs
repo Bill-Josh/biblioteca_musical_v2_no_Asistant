@@ -125,7 +125,8 @@ namespace biblioteca_musical_v2_no_Asistant.Controllers
 
         /// <summary>
         /// POST: /Artista/Delete/{id}
-        /// Elimina un artista de la base de datos.
+        /// Elimina un artista de la base de datos. Si el artista tiene canciones asociadas,
+        /// no se puede eliminar por restriccion de clave foranea.
         /// </summary>
         /// <param name="id">Identificador del artista a eliminar.</param>
         [HttpPost]
@@ -135,12 +136,18 @@ namespace biblioteca_musical_v2_no_Asistant.Controllers
             var entity = await _db.Artistas.FindAsync(id);
             if (entity != null)
             {
-                // Elimina y guarda cambios
-                _db.Artistas.Remove(entity);
-                await _db.SaveChangesAsync();
+                try
+                {
+                    _db.Artistas.Remove(entity);
+                    await _db.SaveChangesAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    TempData["Error"] = "No se puede eliminar este artista porque tiene canciones asociadas.";
+                }
             }
-
             return RedirectToAction(nameof(Index));
         }
+
     }
 }

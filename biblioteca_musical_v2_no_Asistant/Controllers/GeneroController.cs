@@ -88,18 +88,38 @@ namespace biblioteca_musical_v2_no_Asistant.Controllers
 
         /// <summary>
         /// POST: /Genero/Delete/{id}
-        /// Elimina un género de la base de datos.
+        /// Intenta eliminar un género de la base de datos.
+        /// Si el género está siendo referenciado por canciones u otras entidades relacionadas, 
+        /// se captura la excepción de clave foránea y se muestra un mensaje adecuado al usuario.
         /// </summary>
+        /// <param name="id">ID del género a eliminar.</param>
+        /// <returns>Redirige al índice con un mensaje de error si no se puede eliminar.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var entity = await _db.Generos.FindAsync(id);
-            if (entity != null)
+            if (entity == null)
+                return NotFound();
+
+            try
             {
                 _db.Generos.Remove(entity);
                 await _db.SaveChangesAsync();
             }
+            catch (DbUpdateException ex)
+            {
+                // Validamos si el error proviene de una restricción de clave foránea (FK)
+                if (ex.InnerException?.Message.Contains("FOREIGN KEY") == true)
+                {
+                    TempData["Error"] = "No se puede eliminar este género porque está siendo utilizado por una o más canciones.";
+                }
+                else
+                {
+                    TempData["Error"] = "Se produjo un error inesperado al intentar eliminar el género.";
+                }
+            }
+
             return RedirectToAction(nameof(Index));
         }
     }

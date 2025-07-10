@@ -3,6 +3,13 @@
     ViewData["Title"] = "Artistas";
 }
 
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["Error"]
+    </div>
+}
+
 <h1 class="text-center text-primary">ARTISTAS</h1>
 
 <div class="mb-3 text-end">
